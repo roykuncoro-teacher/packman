@@ -60,23 +60,73 @@ const pacman = {
     radius: 8, speed: 2, dx: 0, dy: 0, nextDx: 0, nextDy: 0
 };
 
+// Memuat gambar sprite musuh
+function loadSprite(src) {
+    const img = new Image();
+    img.src = src;
+    return img;
+}
+
+const ghostSize = 28; // ukuran gambar musuh (petak = 20px)
+
 const ghosts = [
-    { x: 15 * tileSize + 10, y: 8 * tileSize + 10, color: 'red', speed: 2, dx: 2, dy: 0, radius: 8 },
-    { x: 16 * tileSize + 10, y: 8 * tileSize + 10, color: 'pink', speed: 2, dx: -2, dy: 0, radius: 8 },
-    { x: 15 * tileSize + 10, y: 10 * tileSize + 10, color: 'cyan', speed: 2, dx: 0, dy: -2, radius: 8 }
+    { x: 15 * tileSize + 10, y: 8 * tileSize + 10, color: 'white', sprite: loadSprite('kuntilanak_enemy_sprite.svg'), speed: 2, dx: 2, dy: 0, radius: 8 },
+    { x: 16 * tileSize + 10, y: 8 * tileSize + 10, color: 'beige', sprite: loadSprite('pocong_enemy_sprite.svg'), speed: 2, dx: -2, dy: 0, radius: 8 },
+    { x: 15 * tileSize + 10, y: 10 * tileSize + 10, color: 'brown', sprite: loadSprite('genderuwo_enemy_sprite.svg'), speed: 2, dx: 0, dy: -2, radius: 8 }
 ];
+
+// === TEMA HUTAN ===
+// Gambar petak dibuat sekali saja, lalu dipakai berulang agar game tetap ringan
+function createTile(draw) {
+    const tile = document.createElement('canvas');
+    tile.width = tile.height = tileSize * 4; // resolusi 4x agar tidak buram
+    const t = tile.getContext('2d');
+    t.scale(4, 4);
+    draw(t);
+    return tile;
+}
+
+function circle(c, x, y, r, color) {
+    c.beginPath();
+    c.arc(x, y, r, 0, Math.PI * 2);
+    c.fillStyle = color;
+    c.fill();
+}
+
+// Jalan tanah dengan kerikil
+const groundTile = createTile(t => {
+    t.fillStyle = '#3b2a1a';
+    t.fillRect(0, 0, tileSize, tileSize);
+    circle(t, 4, 5, 1, '#4d3924');
+    circle(t, 15, 13, 1.3, '#2e2013');
+    circle(t, 8, 16, 0.7, '#5a442c');
+});
+
+// Pohon sebagai tembok
+const treeTile = createTile(t => {
+    t.fillStyle = '#0f2e14';
+    t.fillRect(0, 0, tileSize, tileSize);
+    circle(t, 10, 10, 9.5, '#1d5226');
+    circle(t, 7, 8, 5.5, '#2a6e31');
+    circle(t, 13, 12, 4.5, '#256029');
+    circle(t, 6, 6, 2.2, '#46933f');
+});
 
 function drawMap() {
     for (let row = 0; row < map.length; row++) {
         for (let col = 0; col < map[row].length; col++) {
-            if (map[row][col] === 1) {
-                ctx.fillStyle = '#1919A6';
-                ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
-            } else if (map[row][col] === 0) {
-                ctx.beginPath();
-                ctx.arc(col * tileSize + tileSize / 2, row * tileSize + tileSize / 2, 3, 0, Math.PI * 2);
-                ctx.fillStyle = '#ffb8ae';
-                ctx.fill(); ctx.closePath();
+            const x = col * tileSize;
+            const y = row * tileSize;
+            const tile = map[row][col] === 1 ? treeTile : groundTile;
+            ctx.drawImage(tile, x, y, tileSize, tileSize);
+
+            // Makanan berupa kunang-kunang yang berkedip
+            if (map[row][col] === 0) {
+                const cx = x + tileSize / 2;
+                const cy = y + tileSize / 2;
+                const glow = 4 + Math.sin(Date.now() / 250 + row + col);
+                circle(ctx, cx, cy, glow, 'rgba(210, 255, 90, 0.25)');
+                circle(ctx, cx, cy, 2, '#eaff7a');
             }
         }
     }
@@ -98,6 +148,63 @@ function drawCharacter(char, color) {
     ctx.arc(char.x, char.y, char.radius, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill(); ctx.closePath();
+}
+
+function drawGhost(ghost) {
+    // Jika gambar gagal / belum termuat, tampilkan lingkaran seperti semula
+    if (!ghost.sprite.complete || ghost.sprite.naturalWidth === 0) {
+        drawCharacter(ghost, ghost.color);
+        return;
+    }
+    // Efek melayang naik-turun (hanya visual, tidak mengubah posisi asli)
+    const float = Math.sin(Date.now() / 150 + ghost.x / 20) * 1.5;
+    ctx.drawImage(ghost.sprite, ghost.x - ghostSize / 2, ghost.y - ghostSize / 2 + float, ghostSize, ghostSize);
+}
+
+// === KARAKTER MANUSIA ===
+function drawPlayer(player) {
+    // Simpan arah hadap terakhir (1 = kanan, -1 = kiri)
+    if (player.dx !== 0) player.facing = Math.sign(player.dx);
+    const moving = gameStarted && (player.dx !== 0 || player.dy !== 0);
+    const step = moving ? Math.sin(Date.now() / 80) * 3 : 0;
+
+    ctx.save();
+    ctx.translate(player.x, player.y);
+    ctx.scale(player.facing || 1, 1);
+    ctx.lineCap = 'round';
+
+    // Fungsi bantu untuk menggambar garis (tangan & kaki)
+    const limb = (x1, y1, x2, y2, color) => {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.8;
+        ctx.stroke();
+    };
+
+    // Cahaya di sekitar pemain agar mudah terlihat
+    circle(ctx, 0, 0, 13, 'rgba(255, 230, 150, 0.18)');
+
+    // Kaki
+    limb(-1.5, 4, -2.5 - step, 11, '#2f5fb3');
+    limb(1.5, 4, 2.5 + step, 11, '#4a7fd6');
+    // Tangan belakang
+    limb(-2, -1, -5 + step, 3, '#c98d62');
+    // Badan (baju merah)
+    ctx.fillStyle = '#e53935';
+    ctx.fillRect(-4, -3, 8, 8);
+    // Tangan depan
+    limb(2, -1, 5 - step, 3, '#f2b98a');
+    // Kepala, rambut, dan mata
+    circle(ctx, 0, -7.5, 4.5, '#f2b98a');
+    ctx.beginPath();
+    ctx.arc(0, -8, 4.8, Math.PI * 0.85, Math.PI * 1.95);
+    ctx.fillStyle = '#2b1a10';
+    ctx.fill();
+    circle(ctx, 2, -7, 0.8, '#111');
+
+    ctx.restore();
 }
 
 function movePacman() {
@@ -215,8 +322,8 @@ function gameLoop() {
         ctx.fillText('UNTUK MULAI', VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2 + 70);
     }
 
-    drawCharacter(pacman, 'yellow');
-    ghosts.forEach(ghost => drawCharacter(ghost, ghost.color));
+    drawPlayer(pacman);
+    ghosts.forEach(drawGhost);
 
     requestAnimationFrame(gameLoop);
 }

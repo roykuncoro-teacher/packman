@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<title>Sprite musuh Genderuwo</title>
+<!-- tanduk -->
+<path fill="#e6d3a3" d="M20 18 L10 3 L27 12 Z M44 18 L54 3 L37 12 Z"/>
+<!-- tubuh berbulu -->
+<path fill="#6b3f2a" stroke="#c27a4a" stroke-width="1.5" stroke-linejoin="round" d="M32 8 L38 12 L45 11 L46 18 L54 23 L50 28 L59 39 L52 40 L58 56 L47 52 L44 61 L37 55 L32 62 L27 55 L20 61 L17 52 L6 56 L12 40 L5 39 L14 28 L10 23 L18 18 L19 11 L26 12 Z"/>
+<!-- wajah -->
+<ellipse fill="#3a2018" cx="32" cy="29" rx="13" ry="14"/>
+<!-- mata menyala -->
+<path fill="#ffd21f" d="M22 22 L30 26 Q27 31 23 28 Z M42 22 L34 26 Q37 31 41 28 Z"/>
+<circle fill="#d40000" cx="26.5" cy="26.5" r="1.5"/><circle fill="#d40000" cx="37.5" cy="26.5" r="1.5"/>
+<!-- mulut bertaring -->
+<path fill="#120505" d="M23 34 Q32 31 41 34 Q37 43 32 43 Q27 43 23 34 Z"/>
+<path fill="#fff" d="M25 34 L28 33 L27 39 Z M39 34 L36 33 L37 39 Z"/>
+</svg>

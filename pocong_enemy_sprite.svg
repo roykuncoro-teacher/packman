@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<title>Sprite musuh Pocong</title>
+<!-- ikatan atas -->
+<path fill="#e8e4d4" d="M27 12 L23 3 L30 7 L32 2 L35 7 L42 3 L37 12 Z"/>
+<!-- tubuh terbungkus kain kafan -->
+<path fill="#f1eedf" d="M32 9 Q47 10 47 25 Q47 31 43 34 Q48 40 44 49 L38 56 L26 56 L20 49 Q16 40 21 34 Q17 31 17 25 Q17 10 32 9 Z"/>
+<!-- ikatan bawah -->
+<path fill="#e8e4d4" d="M28 55 L36 55 L41 62 L32 59 L23 62 Z"/>
+<!-- wajah -->
+<ellipse fill="#8fa88a" cx="32" cy="24" rx="10" ry="11"/>
+<!-- rongga mata dan mata merah -->
+<ellipse fill="#151a14" cx="28" cy="22" rx="3.5" ry="3"/>
+<ellipse fill="#151a14" cx="36" cy="22" rx="3.5" ry="3"/>
+<circle fill="#ff2424" cx="28" cy="22" r="1.6"/>
+<circle fill="#ff2424" cx="36" cy="22" r="1.6"/>
+<!-- mulut -->
+<ellipse fill="#151a14" cx="32" cy="30" rx="2.5" ry="3"/>
+<!-- tali pengikat dan lipatan kain -->
+<path d="M21 35 Q32 39 43 35 M23 50 Q32 53 41 50" fill="none" stroke="#9b927a" stroke-width="2.5"/>
+<path d="M25 40 L30 48 M39 40 L35 47" fill="none" stroke="#c9c3ad" stroke-width="1.2"/>
+</svg>

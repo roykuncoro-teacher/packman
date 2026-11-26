@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<title>Sprite musuh Kuntilanak - warna dapat diubah</title>
+<style>
+:root { --kuntilanak-color: #f4f1ff; --hair-color: #11121b; --eye-color: #ff2424; }
+.cloth { fill: var(--kuntilanak-color); }
+.hair { fill: var(--hair-color); }
+.eye { fill: var(--eye-color); }
+</style>
+<!-- kain putih / tubuh melayang -->
+<path class="cloth" d="M25 27 Q18 31 17 42 L9 57 Q17 60 23 54 L27 60 L32 54 L37 60 L41 54 Q48 60 55 57 L47 42 Q46 31 39 27 Z"/>
+<path class="cloth" d="M24 23 Q32 17 40 23 L43 39 Q32 44 21 39 Z"/>
+<!-- rambut panjang menutupi sisi wajah -->
+<path class="hair" d="M17 27 Q13 7 31 4 Q51 3 49 25 L53 52 Q47 48 44 38 L43 25 Q40 17 32 17 Q23 17 21 26 L20 42 Q17 50 11 53 Z"/>
+<path class="hair" d="M20 14 Q26 5 36 8 Q45 10 46 19 Q41 14 36 15 Q27 14 23 23 L22 36 Q18 42 15 45 L16 25 Z"/>
+<!-- celah wajah -->
+<path fill="#dedbea" d="M25 21 Q32 16 39 21 L39 34 Q32 39 25 34 Z"/>
+<!-- helaian rambut membingkai wajah -->
+<path class="hair" d="M22 17 Q19 27 23 39 L19 47 Q14 41 16 27 Q16 18 22 17 Z"/>
+<path class="hair" d="M41 17 Q46 25 41 39 L46 47 Q51 39 48 25 Q47 18 41 17 Z"/>
+<!-- mata merah -->
+<ellipse class="eye" cx="28.5" cy="28" rx="2.5" ry="2"/>
+<ellipse class="eye" cx="35.5" cy="28" rx="2.5" ry="2"/>
+<circle fill="#fff" cx="29" cy="27.5" r=".7"/><circle fill="#fff" cx="36" cy="27.5" r=".7"/>
+<!-- mulut kecil -->
+<path d="M30 34 Q32 36 34 34" fill="none" stroke="#3a1720" stroke-width="1.4" stroke-linecap="round"/>
+<!-- detail kain -->
+<path d="M24 43 L21 53 M32 43 L32 55 M40 43 L43 53" stroke="#c9c5d7" stroke-width="1.2" opacity=".8"/>
+</svg>
